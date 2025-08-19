@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./src/index.css";
-import JinxTable from "./src/components/react-table/JinxTable.jsx";
+
 import { createColumn } from "./src/utils/columnsUtils.jsx";
 import {
   Dialog,
@@ -16,6 +16,7 @@ import {
 } from "./src/components/ui/dialog.jsx";
 import { Button } from "./src/components/ui/button.jsx";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { JinxTable } from "jinx-table";
 const editDialog = (
   <Dialog>
     <DialogTrigger asChild>
@@ -112,6 +113,8 @@ function DevApp() {
               domain,
               ip,
               ssn,
+              password,
+              birthDate,
               ...rest
             } = users[0];
             setKeys(rest);
@@ -154,7 +157,7 @@ function DevApp() {
   );
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-red-600 px-50">
       <JinxTable
         data={data}
         keys={keys}

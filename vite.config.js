@@ -14,4 +14,39 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    lib: {
+      entry: "src/index.js",
+      name: "JinxTable",
+      fileName: (format) => `jinx-table.${format}.js`,
+    },
+    rollupOptions: {
+      external: [
+        "react",
+        "react-dom",
+        "@radix-ui/react-checkbox",
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-slot",
+        "@tanstack/react-table",
+        "class-variance-authority",
+        "clsx",
+        "lucide-react",
+        "tailwind-merge",
+      ],
+      output: {
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
+          "@radix-ui/react-checkbox": "RadixCheckbox",
+          "@radix-ui/react-dialog": "RadixDialog",
+          "@radix-ui/react-slot": "RadixSlot",
+          "@tanstack/react-table": "TanStackTable",
+          "class-variance-authority": "CVA",
+          clsx: "clsx",
+          "lucide-react": "LucideReact",
+          "tailwind-merge": "tailwindMerge",
+        },
+      },
+    },
+  },
 });

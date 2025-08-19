@@ -1,6 +1,12 @@
 # Jinx Table
 
+[![npm version](https://img.shields.io/npm/v/jinx-table.svg)](https://www.npmjs.com/package/jinx-table) [![npm downloads](https://img.shields.io/npm/dm/jinx-table.svg)](https://www.npmjs.com/package/jinx-table)
+
 A modern, customizable React table component library built with Vite, Tailwind CSS, and Radix UI. Jinx Table provides flexible table rendering, sorting, filtering, pagination, and selection, along with a set of reusable UI components.
+
+![Jinx Table preview](public/jinxtable.jpg)
+
+Get it on npm: [jinx-table](https://www.npmjs.com/package/jinx-table)
 
 ## Features
 
@@ -34,6 +40,16 @@ src/
 
 ### Installation
 
+#### As an npm package:
+
+```sh
+npm install jinx-table
+# or
+yarn add jinx-table
+```
+
+#### From source:
+
 1. **Clone the repository:**
    ```sh
    git clone <your-repo-url>
@@ -54,12 +70,41 @@ src/
 
 ### Basic Example
 
-```
-import JinxTable from './src/components/react-table/JinxTable';
+#### When using as npm package:
+
+```jsx
+import { JinxTable } from "jinx-table";
 
 const data = [
-  { id: 1, name: 'Alice', age: 25 },
-  { id: 2, name: 'Bob', age: 30 },
+  { id: 1, name: "Alice", age: 25 },
+  { id: 2, name: "Bob", age: 30 },
+];
+
+export default function App() {
+  return (
+    <JinxTable
+      data={data}
+      keys={data}
+      filterFields={["name"]}
+      isCheckbox={true}
+      isPagination={true}
+      total={data.length}
+      limit={10}
+      skip={0}
+      loading={false}
+    />
+  );
+}
+```
+
+#### When using from source:
+
+```jsx
+import JinxTable from "./src/components/react-table/JinxTable";
+
+const data = [
+  { id: 1, name: "Alice", age: 25 },
+  { id: 2, name: "Bob", age: 30 },
 ];
 
 export default function App() {
@@ -112,6 +157,29 @@ Use `createColumn` and `checkboxColumn` from `src/utils/columnsUtils.jsx` to def
 - @tanstack/react-table
 - lucide-react (icons)
 - class-variance-authority, clsx, tailwind-merge
+
+## Publishing
+
+To publish this package to npm:
+
+1. **Build the package:**
+
+   ```sh
+   npm run build
+   ```
+
+2. **Login to npm:**
+
+   ```sh
+   npm login
+   ```
+
+3. **Publish:**
+   ```sh
+   npm publish
+   ```
+
+The `prepublishOnly` script will automatically build the package before publishing.
 
 ## License
 
