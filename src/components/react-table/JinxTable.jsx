@@ -37,21 +37,22 @@ export default function JinxTable({
   limit = 10,
   loading,
 }) {
-  const dataKeys = Array.isArray(keys)
-    ? keys.length > 0 && typeof keys[0] === "object" && keys[0] !== null
-      ? Object.keys(keys[0])
-      : []
-    : typeof keys === "object" && keys !== null
-    ? Object.keys(keys)
-    : [];
+  const dataKeys = keys || [];
   const columns = [
     isCheckbox && checkboxColumn(),
-    ...dataKeys.map((key) =>
-      createColumn({
+    ...dataKeys.map((key) => {
+      if (typeof key === "object" && key !== null && !Array.isArray(key)) {
+        return createColumn({
+          accessorKey: key.header,
+          header: key.header,
+          cell: key.cell,
+        });
+      }
+      return createColumn({
         accessorKey: key,
         header: key,
-      })
-    ),
+      });
+    }),
     ...extraColumns,
   ].filter(Boolean);
   const [sorting, setSorting] = React.useState([]);

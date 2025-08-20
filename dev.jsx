@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./src/index.css";
 
-import { createColumn } from "./src/utils/columnsUtils.jsx";
 import {
   Dialog,
   DialogClose,
@@ -16,7 +15,7 @@ import {
 } from "./src/components/ui/dialog.jsx";
 import { Button } from "./src/components/ui/button.jsx";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
-import { JinxTable } from "jinx-table";
+import { JinxTable, createColumn } from "jinx-table";
 const editDialog = (
   <Dialog>
     <DialogTrigger asChild>
@@ -72,7 +71,7 @@ const deleteDialog = (
 const actionColumn = createColumn({
   accessorKey: "actions",
   header: "Actions",
-  customCell: (data) => (
+  cell: (data) => (
     <div className="flex gap-2">
       {editDialog}
       {deleteDialog}
@@ -95,29 +94,22 @@ function DevApp() {
           .json()
           .then((json) => {
             const users = json.users;
-            const {
-              bank,
-              image,
-              height,
-              weight,
-              address,
-              macAddress,
-              company,
-              userAgent,
-              crypto,
-              maidenName,
-              hair,
-              university,
-              bloodGroup,
-              eyeColor,
-              domain,
-              ip,
-              ssn,
-              password,
-              birthDate,
-              ...rest
-            } = users[0];
-            setKeys(rest);
+            setKeys([
+              {
+                header: "id",
+                cell: (row) => {
+                  return (
+                    <div className="capitalize text-red-600  pl-3">
+                      {row.id}
+                    </div>
+                  );
+                },
+              },
+              "firstName",
+              "lastName",
+              "email",
+              "phone",
+            ]);
             setData(users);
             setTotal(json.total);
             setSkip(json.skip);
@@ -128,6 +120,9 @@ function DevApp() {
       }
     );
   }, [skip]);
+  const sorted = Object.fromEntries(
+    Object.entries(keys).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+  );
 
   const dialog = (
     <Dialog>

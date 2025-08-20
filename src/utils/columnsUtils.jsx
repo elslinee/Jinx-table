@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button.jsx";
-import { Checkbox } from "@/components/ui/checkbox.jsx";
+import { Button } from "../components/ui/button.jsx";
+import { Checkbox } from "../components/ui/checkbox.jsx";
 import { ArrowUpDown } from "lucide-react";
 
-export function createColumn({ accessorKey, header, customCell }) {
+export function createColumn({ accessorKey, header, cell }) {
   return {
     accessorKey: accessorKey,
     header: ({ column }) => {
@@ -19,13 +19,10 @@ export function createColumn({ accessorKey, header, customCell }) {
     },
     cell: ({ row }) => {
       const data = row.original;
-      return customCell ? (
-        <>{customCell(data)}</>
+      return cell ? (
+        <>{cell(data)}</>
       ) : (
-        <div
-          title={row.getValue(accessorKey)}
-          className="capitalize  pl-3"
-        >
+        <div title={row.getValue(accessorKey)} className="capitalize  pl-3">
           {(() => {
             const value = row.getValue(accessorKey);
             if (value === null || value === undefined) return "-";
