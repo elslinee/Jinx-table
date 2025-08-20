@@ -10,12 +10,17 @@ Get it on npm: [jinx-table](https://www.npmjs.com/package/jinx-table)
 
 ## Features
 
+- **Flexible Key System**: Support both simple string keys and object keys with custom headers and cell rendering.
 - **Dynamic Table Rendering**: Easily display data with customizable columns and cell rendering.
 - **Sorting, Filtering, Pagination**: Built-in support for common table operations.
-- **Row Selection**: Optional checkbox selection for rows.
+- **Row Selection**: Optional checkbox selection for rows with `checkboxColumn()` utility.
 - **Composable UI Components**: Includes Button, Input, Checkbox, Dialog, and Table primitives.
-- **Utility Functions**: Helpers for class name merging and column creation.
+- **Utility Functions**:
+  - `cn()` - Smart class name merging with Tailwind CSS conflict resolution
+  - `createColumn()` - Easy column creation with sorting and custom cell rendering
+  - `checkboxColumn()` - Pre-built checkbox selection column
 - **TypeScript-friendly (JSX/JS)**: Written in modern React with hooks and functional components.
+- **Zero Configuration**: Works out of the box with sensible defaults.
 
 ## Project Structure
 
@@ -76,15 +81,15 @@ yarn add jinx-table
 import { JinxTable } from "jinx-table";
 
 const data = [
-  { id: 1, name: "Alice", age: 25 },
-  { id: 2, name: "Bob", age: 30 },
+  { id: 1, name: "Alice", age: 25, status: "active" },
+  { id: 2, name: "Bob", age: 30, status: "inactive" },
 ];
 
 export default function App() {
   return (
     <JinxTable
       data={data}
-      keys={data}
+      keys={["name", "age", "status"]}
       filterFields={["name"]}
       isCheckbox={true}
       isPagination={true}
@@ -96,6 +101,8 @@ export default function App() {
   );
 }
 ```
+
+````
 
 #### When using from source:
 
@@ -103,15 +110,15 @@ export default function App() {
 import JinxTable from "./src/components/react-table/JinxTable";
 
 const data = [
-  { id: 1, name: "Alice", age: 25 },
-  { id: 2, name: "Bob", age: 30 },
+  { id: 1, name: "Alice", age: 25, status: "active" },
+  { id: 2, name: "Bob", age: 30, status: "inactive" },
 ];
 
 export default function App() {
   return (
     <JinxTable
       data={data}
-      keys={data}
+      keys={["name", "age", "status"]}
       filterFields={["name"]}
       isCheckbox={true}
       isPagination={true}
@@ -122,11 +129,161 @@ export default function App() {
     />
   );
 }
+````
+
+### Complete Example with Mixed Key Types
+
+```jsx
+import { JinxTable } from "jinx-table";
+
+const data = [
+  {
+    id: 1,
+    name: "Alice",
+    email: "alice@example.com",
+    age: 25,
+    status: "active",
+  },
+  { id: 2, name: "Bob", email: "bob@example.com", age: 30, status: "inactive" },
+];
+
+export default function App() {
+  const keys = [
+    "name", // Simple string key
+    {
+      header: "Email Address",
+      cell: (data) => (
+        <a
+          href={`mailto:${data.email}`}
+          className="text-blue-600 hover:underline"
+        >
+          {data.email}
+        </a>
+      ),
+    },
+    {
+      header: "Age",
+      cell: (data) => (
+        <span className="font-semibold">{data.age} years old</span>
+      ),
+    },
+    {
+      header: "Status",
+      cell: (data) => (
+        <span
+          className={`px-2 py-1 rounded-full text-xs font-medium ${
+            data.status === "active"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {data.status}
+        </span>
+      ),
+    },
+  ];
+
+  return (
+    <JinxTable
+      data={data}
+      keys={keys}
+      filterFields={["name", "email"]}
+      isCheckbox={true}
+      isPagination={false}
+      loading={false}
+    />
+  );
+}
 ```
 
-### Custom Columns
+### Flexible Key System
 
-Use `createColumn` and `checkboxColumn` from `src/utils/columnsUtils.jsx` to define custom columns and selection.
+JinxTable supports two ways to define table columns:
+
+#### 1. Simple String Keys
+
+```jsx
+// Pass an array of field names
+const keys = ["name", "email", "age", "status"];
+
+<JinxTable
+  data={data}
+  keys={keys}
+  // ... other props
+/>;
+```
+
+#### 2. Object Keys with Custom Configuration
+
+```jsx
+// Pass objects with header and optional cell rendering
+const keys = [
+  "name", // Simple string key
+  {
+    header: "Email Address",
+    cell: (data) => <a href={`mailto:${data.email}`}>{data.email}</a>,
+  },
+  {
+    header: "Age",
+    cell: (data) => <span className="font-bold">{data.age} years</span>,
+  },
+  {
+    header: "Status",
+    cell: (data) => (
+      <span
+        className={`px-2 py-1 rounded text-xs ${
+          data.status === "active"
+            ? "bg-green-100 text-green-800"
+            : "bg-red-100 text-red-800"
+        }`}
+      >
+        {data.status}
+      </span>
+    ),
+  },
+];
+
+<JinxTable
+  data={data}
+  keys={keys}
+  // ... other props
+/>;
+```
+
+### Custom Columns with Utilities
+
+```jsx
+import { createColumn, checkboxColumn } from "jinx-table";
+
+// Define your columns
+const columns = [
+  checkboxColumn(), // Add row selection
+  createColumn({
+    accessorKey: "name",
+    header: "Name",
+    cell: (data) => <span className="font-semibold">{data.name}</span>,
+  }),
+  createColumn({
+    accessorKey: "email",
+    header: "Email",
+  }),
+  createColumn({
+    accessorKey: "status",
+    header: "Status",
+    cell: (data) => (
+      <span
+        className={`px-2 py-1 rounded text-xs ${
+          data.status === "active"
+            ? "bg-green-100 text-green-800"
+            : "bg-gray-100 text-gray-800"
+        }`}
+      >
+        {data.status}
+      </span>
+    ),
+  }),
+];
+```
 
 ### UI Components
 
@@ -144,9 +301,61 @@ Use `createColumn` and `checkboxColumn` from `src/utils/columnsUtils.jsx` to def
 
 ## Utilities
 
+### Core Utilities
+
 - `cn(...inputs)`: Merges class names and resolves Tailwind conflicts
-- `createColumn({ accessorKey, header, customCell })`: Helper for defining table columns
-- `checkboxColumn()`: Adds a selection checkbox column
+- `createColumn({ accessorKey, header, cell })`: Helper for defining table columns with sorting and custom cell rendering
+- `checkboxColumn()`: Adds a selection checkbox column for row selection
+
+### Usage Examples
+
+```jsx
+import { cn, createColumn, checkboxColumn } from "jinx-table";
+
+// Using cn utility for class merging
+const buttonClass = cn("px-4 py-2", "bg-blue-500", "hover:bg-blue-600");
+
+// Creating a custom column
+const nameColumn = createColumn({
+  accessorKey: "name",
+  header: "Full Name",
+  cell: (data) => <span className="font-bold">{data.name}</span>,
+});
+
+// Adding checkbox selection
+const columns = [
+  checkboxColumn(),
+  nameColumn,
+  // ... other columns
+];
+```
+
+### Advanced Column Configuration
+
+```jsx
+// Column with custom header and cell rendering
+const statusColumn = createColumn({
+  accessorKey: "status",
+  header: "Status",
+  cell: (data) => (
+    <span
+      className={`px-2 py-1 rounded ${
+        data.status === "active"
+          ? "bg-green-100 text-green-800"
+          : "bg-red-100 text-red-800"
+      }`}
+    >
+      {data.status}
+    </span>
+  ),
+});
+
+// Column with sorting enabled (default)
+const ageColumn = createColumn({
+  accessorKey: "age",
+  header: "Age",
+});
+```
 
 ## Dependencies
 
