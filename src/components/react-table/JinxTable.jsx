@@ -24,8 +24,6 @@ import {
 import { checkboxColumn, createColumn } from "@/utils/columnsUtils.jsx";
 export default function JinxTable({
   filterFields = [],
-  newDataDialog = null,
-  addNewDataLink = null,
   addData = {
     type: null,
     label: null,
