@@ -20,11 +20,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.jsx";
+
 import { checkboxColumn, createColumn } from "@/utils/columnsUtils.jsx";
 export default function JinxTable({
   filterFields = [],
   newDataDialog = null,
-  newDataLink = null,
+  addNewDataLink = null,
+  addData = {
+    type: null,
+    label: null,
+    link: null,
+    icon: <PlusIcon />,
+    dialog: null,
+  },
   data = [],
   keys = [],
   isCheckbox = false,
@@ -33,7 +41,7 @@ export default function JinxTable({
   previousPage = () => {},
   extraColumns = [],
   total = 0,
-  skip = 0,
+  page = 1,
   limit = 10,
   loading,
 }) {
@@ -101,7 +109,11 @@ export default function JinxTable({
   });
 
   return (
-    <div className="w-full dark:bg-black bg-white  px-5">
+    <div
+      className={`w-full dark:bg-black bg-white  px-5 ${
+        !isPagination && "pb-4"
+      }`}
+    >
       <div className="flex items-center py-4 gap-4 justify-between">
         <div className="flex gap-2 w-full">
           {filterFields.length > 0 && (
@@ -113,12 +125,15 @@ export default function JinxTable({
             />
           )}
         </div>
-        {newDataDialog && newDataDialog}
-        {newDataLink && (
+        {addData.type === "link" && (
           <Button variant="outline" className="cursor-pointer">
-            {newDataLink} <PlusIcon />
+            <a href={addData.link} className="flex items-center gap-2">
+              <span className="hidden sm:flex"> {addData.label}</span>
+              {addData.icon}
+            </a>
           </Button>
         )}
+        {addData.type === "dialog" && addData.dialog}
       </div>
       <div className="rounded-md border w-full">
         <Table className="w-full">
@@ -186,7 +201,7 @@ export default function JinxTable({
       {isPagination && (
         <div className="flex items-center justify-between space-x-2 py-4">
           <div className="text-sm text-muted-foreground">
-            Page {Math.ceil(skip / limit) + 1} of {Math.ceil(total / limit)}
+            Page {page} of {Math.ceil(total / limit)}
           </div>
           <div
             className={`space-x-2 ${
@@ -197,7 +212,7 @@ export default function JinxTable({
               variant="outline"
               size="sm"
               onClick={previousPage}
-              disabled={skip === 0}
+              disabled={page === 1}
             >
               Previous
             </Button>
@@ -205,7 +220,7 @@ export default function JinxTable({
               variant="outline"
               size="sm"
               onClick={nextPage}
-              disabled={Math.ceil(total / limit) === skip / limit + 1}
+              disabled={Math.ceil(total / limit) === page}
             >
               Next
             </Button>

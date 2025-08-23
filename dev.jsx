@@ -15,7 +15,8 @@ import {
 } from "./src/components/ui/dialog.jsx";
 import { Button } from "./src/components/ui/button.jsx";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
-import { JinxTable, createColumn } from "jinx-table";
+import JinxTable from "./src/components/react-table/JinxTable.jsx";
+import { createColumn } from "jinx-table";
 const editDialog = (
   <Dialog>
     <DialogTrigger asChild>
@@ -120,9 +121,6 @@ function DevApp() {
       }
     );
   }, [skip]);
-  const sorted = Object.fromEntries(
-    Object.entries(keys).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-  );
 
   const dialog = (
     <Dialog>
@@ -157,16 +155,21 @@ function DevApp() {
         data={data}
         keys={keys}
         filterFields={["firstName", "lastName", "email", "phone", "id"]}
-        newDataDialog={dialog}
         isCheckbox={true}
         isPagination={true}
         extraColumns={[actionColumn]}
         nextPage={() => setSkip(skip + limit)}
         previousPage={() => setSkip(skip - limit)}
         total={total}
-        skip={skip}
+        page={skip / limit + 1}
         limit={limit}
         loading={loading}
+        addData={{
+          type: "link",
+          label: "Add New Data",
+          link: "/add-new",
+          icon: <PlusIcon />,
+        }}
       />
     </div>
   );
