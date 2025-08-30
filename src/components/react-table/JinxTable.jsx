@@ -124,9 +124,12 @@ export default function JinxTable({
           )}
         </div>
         {addData.type === "link" && (
-          <Button variant="outline" className="cursor-pointer">
-            <a href={addData.link} className="flex items-center gap-2">
-              <span className="hidden sm:flex"> {addData.label}</span>
+          <Button variant="outline" className="cursor-pointer !p-0">
+            <a
+              href={addData.link}
+              className="flex w-full h-full py-2 px-4 items-center gap-2"
+            >
+              <span className="flex"> {addData.label}</span>
               {addData.icon}
             </a>
           </Button>
