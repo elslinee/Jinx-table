@@ -69,16 +69,6 @@ const deleteDialog = (
     </DialogContent>
   </Dialog>
 );
-const actionColumn = createColumn({
-  accessorKey: "actions",
-  header: "Actions",
-  cell: (data) => (
-    <div className="flex gap-2">
-      {editDialog}
-      {deleteDialog}
-    </div>
-  ),
-});
 
 function DevApp() {
   const [data, setData] = useState([]);
@@ -110,6 +100,15 @@ function DevApp() {
               "lastName",
               "email",
               "phone",
+              {
+                header: "Actions",
+                cell: (data) => (
+                  <div className="flex gap-2">
+                    {editDialog}
+                    {deleteDialog}
+                  </div>
+                ),
+              },
             ]);
             setData(users);
             setTotal(json.total);
@@ -122,42 +121,14 @@ function DevApp() {
     );
   }, [skip]);
 
-  const dialog = (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="ml-auto cursor-pointer">
-          Add User <PlusIcon />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button type="submit">Save changes</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-
   return (
-    <div className="min-h-screen bg-red-600 px-50">
+    <div className="min-h-screen bg-white px-50">
       <JinxTable
         data={data}
         keys={keys}
         filterFields={["firstName", "lastName", "email", "phone", "id"]}
         isCheckbox={true}
         isPagination={true}
-        extraColumns={[actionColumn]}
         nextPage={() => setSkip(skip + limit)}
         previousPage={() => setSkip(skip - limit)}
         total={total}

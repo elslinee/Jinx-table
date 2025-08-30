@@ -37,7 +37,6 @@ export default function JinxTable({
   isPagination = false,
   nextPage = () => {},
   previousPage = () => {},
-  extraColumns = [],
   total = 0,
   page = 1,
   limit = 10,
@@ -59,7 +58,6 @@ export default function JinxTable({
         header: key,
       });
     }),
-    ...extraColumns,
   ].filter(Boolean);
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -124,15 +122,15 @@ export default function JinxTable({
           )}
         </div>
         {addData.type === "link" && (
-          <Button variant="outline" className="cursor-pointer !p-0">
-            <a
-              href={addData.link}
-              className="flex w-full h-full py-2 px-4 items-center gap-2"
-            >
+          <a
+            href={addData.link}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <Button variant="outline" className=" ">
               <span className="flex"> {addData.label}</span>
               {addData.icon}
-            </a>
-          </Button>
+            </Button>
+          </a>
         )}
         {addData.type === "dialog" && addData.dialog}
       </div>
